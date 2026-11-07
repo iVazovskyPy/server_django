@@ -1,0 +1,6 @@
+venv/
+.venv/
+*.pyc
+__pycache__/
+server_django/db.sqlite3
+.DS_Store
