@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Тест Supabase без библиотек</title>
+</head>
+<body style="font-family: sans-serif; padding: 20px;">
+  <h2>Тест регистрации</h2>
+  <input type="email" id="email" placeholder="Введите ваш Email" style="padding: 8px;" /><br><br>
+  <input type="password" id="password" placeholder="Пароль (от 6 символов)" style="padding: 8px;" /><br><br>
+  <button onclick="register()" style="padding: 8px 16px; cursor: pointer;">Зарегистрироваться</button>
+  <p id="message" style="font-weight: bold;"></p>
+
+  <script>
+    // ВСТАВЬТЕ ВАШИ ДАННЫЕ СЮДА:
+    const SUPABASE_URL = 'https://xfvqmstpdrfwqnfdsglp.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_wvOfba_7qtQIKO8mq7bU5A_iNRqHEN4';
+
+    async function register() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const msg = document.getElementById('message');
+
+      msg.style.color = 'black';
+      msg.innerText = 'Отправляем запрос...';
+
+      try {
+        // Отправляем прямой запрос на встроенный эндпоинт регистрации Supabase
+        const response = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_KEY
+          },
+          body: JSON.stringify({
+            email: email,
+            password: password
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          msg.style.color = 'red';
+          msg.innerText = 'Ошибка от Supabase: ' + (data.msg || data.error_description || JSON.stringify(data));
+        } else {
+          msg.style.color = 'green';
+          msg.innerText = 'Успешно! Письмо отправлено, проверьте почту (и папку Спам).';
+        }
+      } catch (err) {
+        msg.style.color = 'red';
+        msg.innerText = 'Ошибка сети (проверьте доступ к .supabase.co): ' + err.message;
+      }
+    }
+  </script>
+</body>
+</html>
