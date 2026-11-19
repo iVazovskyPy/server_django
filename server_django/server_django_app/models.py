@@ -3,9 +3,11 @@ from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 
 
-class Employee(AbstractUser):
-    #Стандартные поля (username, email, password, first_name, last_name)
-    middle_name = models.CharField(max_length=100, blank=True, default='', verbose_name='Отчество')
+class Position(models.Model):
+    title = models.CharField(max_length=200, unique=True, verbose_name='Должность')
+
+    def __str__(self):
+        return self.title
 
 
 class Unit(models.Model):
@@ -35,7 +37,28 @@ class Unit(models.Model):
         if self.unit_type == self.UnitType.DEPARTMENT and (not self.parent or self.parent.unit_type != self.UnitType.SERVICE):
             raise ValidationError('Отдел должен входить в состав службы')
         if self.unit_type == self.UnitType.SECTOR and (not self.parent or self.parent.unit_type != self.UnitType.DEPARTMENT):
-            raise VAlidationError('Сектор должен входить в состав отдела')
+            raise ValidationError('Сектор должен входить в состав отдела')
 
     def __str__(self):
         return f"{self.get_unit_type_display()}.{self.name}"
+
+
+class Employee(AbstractUser):
+    #Стандартные поля (username, email, password, first_name, last_name)
+    middle_name = models.CharField(max_length=100, blank=True, default='', verbose_name='Отчество')
+    unit = models.ForeignKey(
+        Unit,
+        on_delete = models.PROTECT,
+        blank = True,
+        null = True,
+        related_name = 'employees',
+        verbose_name = 'Подразделение'
+    )
+    position = models.ForeignKey(
+        Position,
+        on_delete = models.PROTECT,
+        blank = True,
+        null = True,
+        related_name = 'employees',
+        verbose_name = 'Должность'
+    )
