@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Главная страница</title>
+</head>
+<body>
+  <header>
+    <h1>Тестирование ПТЭ</h1>
+  </header>
+
+  <main>
+    <p>Основной текст страницы.</p>
+    {% if user.is_authenticated %}
+        <p>{{ user.username }}</p>
+    {% else %}
+        <p>Anonimous</p>
+    {% endif %}
+  </main>
+
+  <footer>
+    <p>Подвал сайта</p>
+  </footer>
+</body>
+</html>

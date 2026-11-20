@@ -42,7 +42,6 @@ class Unit(models.Model):
     def __str__(self):
         return f"{self.get_unit_type_display()}.{self.name}"
 
-
 class Employee(AbstractUser):
     #Стандартные поля (username, email, password, first_name, last_name)
     middle_name = models.CharField(max_length=100, blank=True, default='', verbose_name='Отчество')
